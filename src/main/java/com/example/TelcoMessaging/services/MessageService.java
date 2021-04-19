@@ -73,10 +73,6 @@ public class MessageService {
         session.close();
     }
 
-    public void setIDS(Long l){
-        MessageEntity m = new MessageEntity();
-        m.setIds(l);
-    }
 
 
 }

@@ -1,19 +1,15 @@
 package com.example.TelcoMessaging.entities;
 
 
-import com.example.TelcoMessaging.repositories.MessageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "message")
 public class MessageEntity {
 
-
-    static Long ids = 0L;
-
     @Id
+    @SequenceGenerator(name="MessageSequence", sequenceName="seqmessageid", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator ="MessageSequence")
     @Column(name = "id")
     private Long Id;
 
@@ -22,16 +18,13 @@ public class MessageEntity {
 
 
     public MessageEntity(String t){
-        ids += 1;
-        this.Id = ids;
         this.Text = t;
     }
 
     public MessageEntity() {}
 
-
-    public void setIds(Long ids) {
-        MessageEntity.ids = ids;
+    public String getText() {
+        return Text;
     }
 
     public String toString(){

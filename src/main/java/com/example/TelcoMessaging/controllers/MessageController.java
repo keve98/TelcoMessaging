@@ -3,10 +3,12 @@ package com.example.TelcoMessaging.controllers;
 
 import com.example.TelcoMessaging.entities.MessageEntity;
 import com.example.TelcoMessaging.services.MessageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
+
 import java.util.List;
 
 @RestController
@@ -21,47 +23,25 @@ public class MessageController {
     }
 
 
-    @GetMapping("/")
-    public Long setIDS(){
-        List<MessageEntity> tmp = messageService.getAllMessages();
-        Long t = 0L;
-        for(MessageEntity m : tmp){
-            t++;
-        }
-        messageService.setIDS(t);
-        return t;
-    }
-
-
-
     @GetMapping("/messages")
-    public String getMessages() {
-        setIDS();
+    public ResponseEntity<List<MessageEntity>> getMessages() {
         List<MessageEntity> messages = messageService.getAllMessages();
-        String ret = "";
-        for (MessageEntity m : messages) {
-            ret += m.toString();
-        }
-        return ret;
+        return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 
-    @GetMapping("/send/{message}")
-    public String sendMessage(@PathVariable String message) throws JMSException {
-        setIDS();
+    @GetMapping("/send")
+    public ResponseEntity<String> sendMessage(@RequestBody String message) throws JMSException {
         messageService.sendMessage(message);
-
 
         if(messageService.findByText(message) == null){
             messageService.addMessage(new MessageEntity(message));
         }
-
-        return "'" + message+"'" +" sent";
+        return new ResponseEntity<>("Sent: " + message, HttpStatus.OK);
     }
 
     @GetMapping("/receive")
-    public String receiveMessage() throws JMSException {
-        setIDS();
-       return "Received message:    " + messageService.receiveMessage();
+    public ResponseEntity<String> receiveMessage() throws JMSException {
+       return new ResponseEntity<>("Received message:    " + messageService.receiveMessage(), HttpStatus.OK);
     }
 
 
