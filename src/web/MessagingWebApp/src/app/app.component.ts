@@ -8,14 +8,14 @@ import { MessageService } from './message.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
-  public messages: Message[] | undefined;
+export class AppComponent /*implements OnInit*/{
+  /*public messages: Message[] | undefined;
 
 
   constructor(private messageService : MessageService){}
 
   ngOnInit(){
-    this.getMessages();
+   // this.getMessages();
   }
 
   public getMessages(): void{
@@ -27,6 +27,6 @@ export class AppComponent implements OnInit{
         alert(error.message);
       }
     );
-  }
+  }*/
 
 }

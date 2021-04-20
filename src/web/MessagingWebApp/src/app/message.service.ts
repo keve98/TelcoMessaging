@@ -21,8 +21,11 @@ export class MessageService{
         return this.http.get<Message>(`${this.apiServerUrl}/receive`);
     }
 
-    public sendMessage(message: Message): Observable<Message>{
-        return this.http.post<Message>(`${this.apiServerUrl}/send`, message);
+    public sendMessage(message: String): Observable<Message>{
+        return this.http.post<Message>(`${this.apiServerUrl}/send/${message}`, message);
     }
 
+    public deleteAll(): Observable<void>{
+        return this.http.delete<void>(`${this.apiServerUrl}/messages/delete`);
+    }
 }

@@ -29,20 +29,29 @@ public class MessageController {
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 
-    @GetMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody String message) throws JMSException {
+    @PostMapping("/send/{message}")
+    public ResponseEntity<MessageEntity> sendMessage(@PathVariable String message) throws JMSException {
         messageService.sendMessage(message);
-
+        MessageEntity newEntity = new MessageEntity(message);
         if(messageService.findByText(message) == null){
-            messageService.addMessage(new MessageEntity(message));
+            messageService.addMessage(newEntity);
         }
-        return new ResponseEntity<>("Sent: " + message, HttpStatus.OK);
+        return new ResponseEntity<>(newEntity, HttpStatus.OK);
     }
 
     @GetMapping("/receive")
-    public ResponseEntity<String> receiveMessage() throws JMSException {
-       return new ResponseEntity<>("Received message:    " + messageService.receiveMessage(), HttpStatus.OK);
+    public ResponseEntity<MessageEntity> receiveMessage() throws JMSException {
+       return new ResponseEntity<>( messageService.receiveMessage(), HttpStatus.OK);
     }
+
+    @DeleteMapping("/messages/delete")
+    public ResponseEntity<?> deleteAllMessages(){
+        messageService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+   // @DeleteMapping("/messages/delete/{id}")
+
 
 
 }

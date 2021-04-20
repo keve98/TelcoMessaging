@@ -20,4 +20,5 @@ public interface MessageRepository extends CrudRepository<MessageEntity, Long> {
     MessageEntity findByText(@Param("txt") String txt);
 
 
+
 }

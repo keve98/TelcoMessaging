@@ -16,9 +16,27 @@ import java.util.List;
 public class MessageService {
 
     private final MessageRepository messageRepository;
+    ActiveMQConnectionFactory connectionFactory;
+    Connection connection;
+    Session session;
+    Destination destination;
+    MessageConsumer consumer;
+    MessageProducer messageProducer;
+
 
     @Autowired
-    public MessageService(MessageRepository m){this.messageRepository = m;}
+    public MessageService(MessageRepository m) throws JMSException {
+        messageRepository = m;
+        connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        connection = connectionFactory.createConnection();
+        connection.start();
+        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        destination = session.createQueue("jms.destination");
+        messageProducer = session.createProducer(destination);
+        messageProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        consumer = session.createConsumer(destination);
+
+    }
 
     public List<MessageEntity> getAllMessages(){
         return messageRepository.findAll();
@@ -32,45 +50,21 @@ public class MessageService {
 
     public void addMessage(MessageEntity messageEntity){messageRepository.save(messageEntity);}
 
-    public String receiveMessage() throws JMSException {
-
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
-
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-        Destination destination = session.createQueue("jms.destination");
-
-        MessageConsumer consumer = session.createConsumer(destination);
+    public MessageEntity receiveMessage() throws JMSException {
 
         Message message = consumer.receive(1000);
-        if(message != null)
-            return ((TextMessage) message).getText();
-        return "No received message";
+        if(message == null)
+            return null;
+        return new MessageEntity(((TextMessage)message).getText());
     }
 
     public void sendMessage(String message) throws JMSException {
-
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
-
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-        Destination destination = session.createQueue("jms.destination");
-
-        MessageProducer messageProducer = session.createProducer(destination);
-        messageProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-
         TextMessage textmessage = session.createTextMessage(message);
-
         messageProducer.send(textmessage);
+    }
 
-
-        session.close();
+    public void deleteAll(){
+        messageRepository.deleteAll();
     }
 
 

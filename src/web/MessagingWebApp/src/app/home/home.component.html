@@ -1,0 +1,16 @@
+<h1>
+    Messages in database
+</h1>
+<div>
+    <div id="messagesinlist"></div>
+    <table>
+    <td>
+        <tr *ngFor = "let message of messages">
+           {{message.id}} {{message.text}}
+        </tr>
+    </td>
+    </table>
+</div>
+<div>
+    <button type="button" id="deletebutton" (click)="deleteList()">Delete all messages.</button>
+</div>
