@@ -14,7 +14,7 @@ public interface MessageRepository extends CrudRepository<MessageEntity, Long> {
 
     @Query(value ="select m from MessageEntity m order by  m.Id")
     List<MessageEntity> findAll();
-
+    
 
     @Query(value = "select m from MessageEntity m where m.Text like :#{#txt}")
     MessageEntity findByText(@Param("txt") String txt);

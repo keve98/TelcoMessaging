@@ -26,9 +26,4 @@ public class MessageEntity {
     public String getText() {
         return Text;
     }
-
-    public String toString(){
-        return "[" + this.Id + "]" + "  " + this.Text;
-    }
-
 }

@@ -5,7 +5,7 @@ import { ReceiveComponent } from './receive';
 import { SendComponent } from './send';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+    {path: '', component: HomeComponent},
     {path: 'send', component: SendComponent},
     {path: 'receive', component: ReceiveComponent},
     {path: '**', redirectTo: ''}

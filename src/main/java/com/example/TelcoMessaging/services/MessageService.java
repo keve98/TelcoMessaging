@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.jms.*;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -26,14 +25,26 @@ public class MessageService {
 
     @Autowired
     public MessageService(MessageRepository m) throws JMSException {
+
+        //initialize the repositry
         messageRepository = m;
+
+        //activemq connection on port 61616
         connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connection = connectionFactory.createConnection();
         connection.start();
+
+        //context between producer and consumer
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        //queue with the given name
         destination = session.createQueue("jms.destination");
+
+        //create producer for the session
         messageProducer = session.createProducer(destination);
         messageProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+        //create consumer for the session
         consumer = session.createConsumer(destination);
 
     }
@@ -43,7 +54,7 @@ public class MessageService {
     }
 
     public MessageEntity findByText(String text){
-        MessageEntity temp = null;
+        MessageEntity temp;
         temp = messageRepository.findByText(text);
         return temp;
     }
@@ -51,15 +62,18 @@ public class MessageService {
     public void addMessage(MessageEntity messageEntity){messageRepository.save(messageEntity);}
 
     public MessageEntity receiveMessage() throws JMSException {
-
         Message message = consumer.receive(1000);
+        //if the user want to receive a message with the receivebutton but there is no more in the queue
         if(message == null)
             return null;
         return new MessageEntity(((TextMessage)message).getText());
     }
 
     public void sendMessage(String message) throws JMSException {
+        //create a textmessage with the parameter
         TextMessage textmessage = session.createTextMessage(message);
+
+        //send the created textmessage
         messageProducer.send(textmessage);
     }
 

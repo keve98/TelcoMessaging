@@ -49,9 +49,4 @@ public class MessageController {
         messageService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-   // @DeleteMapping("/messages/delete/{id}")
-
-
-
 }
