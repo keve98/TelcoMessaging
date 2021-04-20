@@ -16,7 +16,7 @@ export class ReceiveComponent{
                 if(result === null){
                     alert("There are no messages in the mailbox.");
                 }else{
-            console.log(result.text);
+            
             (<HTMLInputElement>document.getElementById("receivedmessagetext")).value = result.text;
                 }
         })

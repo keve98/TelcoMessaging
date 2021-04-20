@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.jms.*;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -59,6 +60,12 @@ public class MessageService {
         return temp;
     }
 
+    public Optional<MessageEntity> findById(Long id){
+        Optional<MessageEntity> temp;
+        temp = messageRepository.findById(id);
+        return temp;
+    }
+
     public void addMessage(MessageEntity messageEntity){messageRepository.save(messageEntity);}
 
     public MessageEntity receiveMessage() throws JMSException {
@@ -81,6 +88,12 @@ public class MessageService {
         messageRepository.deleteAll();
     }
 
-
+    public Optional<MessageEntity> deleteById(Long id){
+        Optional<MessageEntity> temp = this.findById(id);
+        if(temp.isEmpty())
+            return null;
+        messageRepository.deleteById(id);
+        return temp;
+    }
 
 }

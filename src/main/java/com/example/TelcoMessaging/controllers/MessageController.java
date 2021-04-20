@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.jms.JMSException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class MessageController {
@@ -49,4 +50,10 @@ public class MessageController {
         messageService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/messages/delete/{id}")
+    public ResponseEntity<Optional<MessageEntity>> deleteById(@PathVariable Long id){
+        return new ResponseEntity<>(messageService.deleteById(id), HttpStatus.OK);
+    }
+
 }

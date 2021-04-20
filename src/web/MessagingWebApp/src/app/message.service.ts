@@ -28,4 +28,8 @@ export class MessageService{
     public deleteAll(): Observable<void>{
         return this.http.delete<void>(`${this.apiServerUrl}/messages/delete`);
     }
+
+    public deleteById(id: number): Observable<Message>{
+        return this.http.delete<Message>(`${this.apiServerUrl}/messages/delete/${id}`);
+    }
 }

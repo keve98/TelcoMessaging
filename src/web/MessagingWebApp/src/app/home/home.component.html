@@ -6,11 +6,14 @@
     <table>
     <td>
         <tr *ngFor = "let message of messages">
-           {{message.id}} {{message.text}}
+           [{{message.id}}] {{message.text}}
         </tr>
     </td>
     </table>
 </div>
 <div>
-    <button type="button" id="deletebutton" (click)="deleteList()">Delete messages</button>
+
+    <input type="number" id="deletedid" placeholder="Which id you want to delete?">
+    <button type="button" id="deleteidbutton" (click)="deleteId()">Delete this message</button><br>
+    <button type="button" id="deletebutton" (click)="deleteList()">Delete all messages</button>
 </div>

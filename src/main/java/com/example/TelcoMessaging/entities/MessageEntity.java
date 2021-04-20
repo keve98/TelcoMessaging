@@ -26,4 +26,8 @@ public class MessageEntity {
     public String getText() {
         return Text;
     }
+
+    public Long getId(){
+        return Id;
+    }
 }

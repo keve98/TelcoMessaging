@@ -43,5 +43,26 @@ export class HomeComponent implements OnInit{
       }
     }
 
+    public deleteId(): void{
+      var IdToDelete = (<HTMLInputElement>document.getElementById('deletedid')).value;
+      
+      if(IdToDelete === ""){
+        alert("Type an id into the field");
+      }else{
+        var _IdToDelete = parseInt(IdToDelete);
+        this.messageService.deleteById(_IdToDelete).subscribe(
+          (result)=>{
+            if(result === null){
+              alert("Message with this id does not exist.");
+            }else{
+              alert("Message deleted");
+              window.location.reload();
+            }
+          }
+        )
+      }
+
+    }
+
 
 }
